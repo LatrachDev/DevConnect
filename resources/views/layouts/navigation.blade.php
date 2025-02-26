@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                    <div class="text-2xl font-bold text-blue-400">&lt;DevConnect/&gt;</div>
+                        <div class="text-2xl font-bold text-blue-400">&lt;DevConnect/&gt;</div>
                     </a>
                 </div>
             </div>
