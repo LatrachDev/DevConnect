@@ -21,6 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'bio',
+        'github_url',
+        'linkedin_url',
+        'website_url',
     ];
 
     /**
@@ -42,4 +46,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function skills()
+    {
+        return $this->hasMany(Skill::class);
+    }
 }

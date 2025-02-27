@@ -32,7 +32,7 @@
                         </button>
                         
                         <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-xl shadow-lg py-1 z-50">
-                            <a href="/showProfile" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Profile</a>
+                            <a href="/my_profile" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Profile</a>
                             <a href="/profile" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Update Profile</a>
                             <a href="/logout" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Logout</a>
                         </div>

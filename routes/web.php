@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SkillController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,9 +28,11 @@ Route::middleware('auth')->group(function () {
     // Route::get('/showProfile', [ProfileController::class, 'index'])->name('profile.index');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/skills', [SkillController::class, 'store'])->name('skills.store');
+    Route::delete('/skills/{skill}', [SkillController::class, 'destroy'])->name('skills.destroy');
 });
 
-Route::get('/showProfile', [App\Http\Controllers\ProfileController::class, 'index'])
+Route::get('/my_profile', [App\Http\Controllers\ProfileController::class, 'index'])
     ->name('profile.index')
     ->middleware(['auth']);
 
