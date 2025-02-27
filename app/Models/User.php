@@ -27,6 +27,11 @@ class User extends Authenticatable
         'website_url',
     ];
 
+    public function skills()
+    {
+        return $this->hasMany(Skill::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -45,10 +50,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'skills' => 'array',
     ];
 
-    public function skills()
+    public function getSkillsAttribute($value)
     {
-        return $this->hasMany(Skill::class);
+        return $value ? json_decode($value, true) : [];
     }
 }

@@ -9,7 +9,7 @@ class Skill extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'color', 'user_id'];
+    protected $fillable = ['skill_name', 'user_id'];
 
     public function user()
     {

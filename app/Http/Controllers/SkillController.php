@@ -12,7 +12,9 @@ class SkillController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth()->user();
+        $skills = $user ? $user->skills : [];
+        return view('profile.index', compact('skills'));
     }
 
     /**
@@ -50,14 +52,20 @@ class SkillController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'color' => 'required|string'
+        $request->validate([
+            'skill_name' => ['required', 'string'],
         ]);
 
-        $skill = auth()->user()->Skill()->create($validated);
+        $skill = Skill::create([
+            'skill_name' => $request->skill_name,
+            'user_id' => auth()->id(),
+        ]);
 
-        return response()->json($skill);
+        if (!$skill) 
+        {
+            return redirect()->route('/profile')->with('error', 'Skill not created');
+        }
+        return redirect()->route('profile.update')->with('success', 'Skill created successfully');
     }
 
     public function destroy(Skill $skill)
