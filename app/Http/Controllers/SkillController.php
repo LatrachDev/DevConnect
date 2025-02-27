@@ -70,8 +70,8 @@ class SkillController extends Controller
 
     public function destroy(Skill $skill)
     {
-        $this->authorize('delete', $skill);
         $skill->delete();
-        return response()->json(['message' => 'Skill deleted']);
+
+        return redirect()->back()->with('status', 'Skill deleted successfully!');
     }
 }

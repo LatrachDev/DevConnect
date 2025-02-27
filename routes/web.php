@@ -37,3 +37,4 @@ Route::get('/my_profile', [App\Http\Controllers\ProfileController::class, 'index
     ->middleware(['auth']);
 
 require __DIR__.'/auth.php';
+

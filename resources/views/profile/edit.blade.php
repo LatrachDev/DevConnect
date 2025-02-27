@@ -107,11 +107,15 @@
                                 @forelse(Auth::user()->skills()->get() as $skill)
                                     <span class="px-3 py-1 bg-blue-900 text-blue-200 rounded-full text-sm flex items-center">
                                         {{ $skill->skill_name }}
-                                        <button type="button" class="ml-1 hover:text-blue-100">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                        </button>
+                                        <form action="{{ route('skills.destroy', $skill->id) }}" method="post" class="ml-1 hover:text-blue-100">
+                                            @csrf
+                                            @method('DELETE')    
+                                            <button type="submit" class="flex items-center">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                            </button>
+                                        </form>
                                     </span>
 
                                 @empty
