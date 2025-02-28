@@ -110,7 +110,7 @@
                             </div>
                             <div class="flex justify-between text-sm mt-2">
                                 <span class="text-gray-400">Posts</span>
-                                <span class="text-blue-400 font-medium">52</span>
+                                <span class="text-blue-400 font-medium">0</span>
                             </div>
                         </div>
                     </div>
@@ -135,46 +135,98 @@
                 <div class="bg-gray-800 rounded-xl shadow-sm p-4">
                     <div class="flex items-center space-x-4">
                         <img src="https://avatar.iran.liara.run/public/boy" alt="User" class="w-12 h-12 rounded-full"/>
-                        <button class="bg-gray-700 hover:bg-gray-600 text-gray-400 text-left rounded-lg px-4 py-3 flex-grow transition-colors duration-200">
+                        <a href="{{ route('posts.create') }}" class="bg-gray-700 hover:bg-gray-600 text-gray-400 text-left rounded-lg px-4 py-3 flex-grow transition-colors duration-200">
                             Share your knowledge or ask a question...
-                        </button>
+                        </a>
                     </div>
                     <!-- Post buttons remain similar with updated colors -->
                 </div>
 
-                <!-- Posts -->
-                <div class="bg-gray-800 rounded-xl shadow-sm">
+                <!-- post -->
+                @forelse(Auth::user()->posts()->get() as $post) 
+
+                <div class="bg-white rounded-xl shadow-sm mx-auto mb-4">
                     <div class="p-4">
-                        <!-- Post header -->
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
-                                <img src="https://avatar.iran.liara.run/public/boy" alt="User" class="w-12 h-12 rounded-full"/>
+                                <img src="https://avatar.iran.liara.run/public/man" alt="User" class="w-12 h-12 rounded-full"/>
                                 <div>
-                                    <h3 class="font-semibold text-gray-100">Alex Chen</h3>
-                                    <p class="text-gray-400 text-sm">Senior Backend Developer</p>
-                                    <p class="text-gray-500 text-xs">1h ago</p>
+                                    <h3 class="font-semibold">{{ Auth::user()->name }}</h3>
+                                    <p class="text-gray-500 text-sm font-bold">{{ $post->title }}</p>
+                                    <p class="text-gray-500 text-sm">{{ $post->created_at }}</p>
+                                </div>
+                            </div>
+                            <!-- Options Button -->
+                            <div class="relative">
+                                <button id="optionsButton-{{ $post->id }}" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/>
+                                    </svg>
+                                </button>
+                                <!-- Dropdown Menu -->
+                                <div id="optionsDropdown-{{ $post->id }}" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg hidden">
+                                    <a href="/posts/edit" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Edit Post</a>
+                                    <button class="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-100">Delete Post</button>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Post content -->
+
                         <div class="mt-4">
-                            <p class="text-gray-300">Just implemented a caching layer using Redis...</p>
+                            <p class="text-gray-700">{{ $post->content }}</p>
+                            
                             <div class="mt-4 bg-gray-900 rounded-lg p-4 font-mono text-sm text-gray-200">
-                                <!-- Code snippet -->
+                                <img src="{{ Storage::url($post->image) }}" alt="">
                             </div>
-                            <!-- Tags -->
-                            <div class="mt-4 flex flex-wrap gap-2">
-                                <span class="px-2 py-1 bg-blue-900 text-blue-200 rounded-full text-xs">#nodejs</span>
-                                <!-- More tags -->
+
+                            <div class="mt-4 flex items-center justify-between border-t pt-4">
+                                <div class="flex items-center space-x-4">
+                                    <button class="flex items-center space-x-2 text-gray-500 hover:text-blue-500">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
+                                        </svg>
+                                        <span>{{ $post->likes_count }}</span>
+                                    </button>
+                                    <button class="flex items-center space-x-2 text-gray-500 hover:text-blue-500">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                                        </svg>
+                                        <span>{{ $post->comments_count }}</span>
+                                    </button>
+                                </div>
+                                <button class="text-gray-500 hover:text-blue-500">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <script>
+                    // Add event listeners for each post's options button and dropdown
+                    document.getElementById("optionsButton-{{ $post->id }}").addEventListener("click", function(event) {
+                        event.stopPropagation(); // Prevent the click from bubbling up
+                        const dropdown = document.getElementById("optionsDropdown-{{ $post->id }}");
+                        dropdown.classList.toggle("hidden");
+                    });
+
+                    // Close dropdown when clicking outside
+                    window.addEventListener("click", function() {
+                        const dropdown = document.getElementById("optionsDropdown-{{ $post->id }}");
+                        if (!dropdown.classList.contains("hidden")) {
+                            dropdown.classList.add("hidden");
+                        }
+                    });
+                </script>
+
+                @empty
+                    <p class="text-gray-400">No posts added yet.</p>
+                @endforelse
             </div>
 
             <!-- Right Sidebar -->
-            <div class="space-y-6">
+            <div class="lg:col-span-1 space-y-6">
                 <!-- Job Recommendations -->
                 <div class="bg-gray-800 rounded-xl shadow-sm p-4">
                     <h3 class="font-semibold text-gray-100 mb-4">Job Recommendations</h3>
@@ -187,7 +239,6 @@
                                     <p class="text-gray-400 text-sm">TechStart Inc.</p>
                                     <div class="mt-2 flex flex-wrap gap-2">
                                         <span class="px-2 py-1 bg-gray-700 text-gray-300 rounded-full text-xs">React</span>
-                                        <!-- More tags -->
                                     </div>
                                 </div>
                             </div>
@@ -209,6 +260,7 @@
                     </div>
                 </div>
             </div>
+            
         </div>
     </div>
 </body>

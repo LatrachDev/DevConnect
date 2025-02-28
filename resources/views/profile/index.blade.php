@@ -104,30 +104,42 @@
                 
                 
                 <!-- post -->
-                @forelse(Auth::user()->posts()->get() as $post)
-                 
-                <!-- Posts -->
-                <div class="bg-white rounded-xl shadow-sm w-6/12 mx-auto">
+                @forelse(Auth::user()->posts()->get() as $post) 
+
+                <div class="bg-white rounded-xl shadow-sm w-6/12 mx-auto mb-4">
                     <div class="p-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
                                 <img src="https://avatar.iran.liara.run/public/man" alt="User" class="w-12 h-12 rounded-full"/>
                                 <div>
                                     <h3 class="font-semibold">{{ Auth::user()->name }}</h3>
+                                    <p class="text-gray-500 text-sm font-bold">{{ $post->title }}</p>
                                     <p class="text-gray-500 text-sm">{{ $post->created_at }}</p>
                                 </div>
                             </div>
-                            <button class="text-gray-400 hover:text-gray-600">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/>
-                                </svg>
-                            </button>
+                            <!-- Options Button -->
+                            <div class="relative">
+                                <button id="optionsButton-{{ $post->id }}" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/>
+                                    </svg>
+                                </button>
+                                <!-- Dropdown Menu -->
+                                <div id="optionsDropdown-{{ $post->id }}" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg hidden">
+                                    <a href="{{ route('posts.edit', $post->id) }}" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Edit Post</a>
+                                    <form method="POST" action="{{ route('posts.destroy', $post->id) }}" class="block w-full text-left">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="w-full px-4 py-2 text-red-600 hover:bg-red-100">Delete Post</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                        
+
                         <div class="mt-4">
                             <p class="text-gray-700">{{ $post->content }}</p>
                             
-                            <div class="mt-4 bg-gray-900 rounded-lg p-4 font-mono text-sm text-gray-200 ">
+                            <div class="mt-4 bg-gray-900 rounded-lg p-4 font-mono text-sm text-gray-200">
                                 <img src="{{ Storage::url($post->image) }}" alt="">
                             </div>
 
@@ -155,8 +167,26 @@
                         </div>
                     </div>
                 </div>
+
+                <script>
+                    // Add event listeners for each post's options button and dropdown
+                    document.getElementById("optionsButton-{{ $post->id }}").addEventListener("click", function(event) {
+                        event.stopPropagation(); // Prevent the click from bubbling up
+                        const dropdown = document.getElementById("optionsDropdown-{{ $post->id }}");
+                        dropdown.classList.toggle("hidden");
+                    });
+
+                    // Close dropdown when clicking outside
+                    window.addEventListener("click", function() {
+                        const dropdown = document.getElementById("optionsDropdown-{{ $post->id }}");
+                        if (!dropdown.classList.contains("hidden")) {
+                            dropdown.classList.add("hidden");
+                        }
+                    });
+                </script>
+
                 @empty
-                    <p class="text-gray-400">No posts added yet.</p>
+                    <p class="text-gray-400 text-center">No posts added yet.</p>
                 @endforelse
             </div>
         </div>

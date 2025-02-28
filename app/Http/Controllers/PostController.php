@@ -50,7 +50,8 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return view('profile.index', compact('post'));
+        $postCount = Post::count();
+        return view('profile.index', compact('post', 'postCount'));
     }
     
     /**
@@ -66,11 +67,11 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $validated = [
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'media_url' => 'nullable|url'
-        ];
+            'image' => 'nullable|image'
+        ]);
         
         $post->update($validated);
         return redirect()->route('dashboard')->with('success', 'Post updated successfully');
