@@ -37,7 +37,7 @@ class PostController extends Controller
 
         if ($request->hasFile('image')) 
         {
-            $validated['image'] = $request->file('image')->store('image');
+            $validated['image'] = $request->file('image')->store('public/storage/image');
         }
         
         $validated['user_id'] = auth()->id();
@@ -50,7 +50,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return view('profile.index', compact('post'));
     }
     
     /**
