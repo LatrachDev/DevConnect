@@ -39,7 +39,7 @@
                     </div>
                     
                     <div class="mt-6 flex flex-wrap gap-4">
-                        <a href="{{ Auth::user()->github ?? '#' }}" 
+                        <a href="{{ Auth::user()->github_url ?? '#' }}" 
                            @click.prevent="$refs.githubInput.showModal()"
                            class="flex items-center text-gray-300 hover:text-blue-400 transition-colors">
                             <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
@@ -47,7 +47,7 @@
                             </svg>
                             <span>GitHub</span>
                         </a>
-                        <a href="{{ Auth::user()->linkedin ?? '#' }}"
+                        <a href="{{ Auth::user()->linkedin_url ?? '#' }}"
                            @click.prevent="$refs.linkedinInput.showModal()"
                            class="flex items-center text-gray-300 hover:text-blue-400 transition-colors">
                             <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
@@ -55,7 +55,7 @@
                             </svg>
                             <span>LinkedIn</span>
                         </a>
-                        <a href="{{ Auth::user()->website ?? '#' }}"
+                        <a href="{{ Auth::user()->website_url ?? '#' }}"
                            @click.prevent="$refs.websiteInput.showModal()"
                            class="flex items-center text-gray-300 hover:text-blue-400 transition-colors">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -87,20 +87,16 @@
                 <div class="bg-gray-800 rounded-xl shadow-sm">
                     <div class="p-6">
                         <h3 class="text-lg font-semibold text-gray-100">Skills & Expertise</h3>
-                        <p class="text-sm text-gray-400 mt-1">Add your technical skills to highlight your expertise.</p>
                         
                         <div class="mt-6">
                             <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="px-3 py-1 bg-blue-900 text-blue-200 rounded-full text-sm">JavaScript</span>
-                                <span class="px-3 py-1 bg-green-900 text-green-200 rounded-full text-sm">Laravel</span>
-                                <span class="px-3 py-1 bg-purple-900 text-purple-200 rounded-full text-sm">Vue.js</span>
-                                <span class="px-3 py-1 bg-yellow-900 text-yellow-200 rounded-full text-sm">MySQL</span>
-                                <button class="px-3 py-1 bg-gray-700 text-gray-200 rounded-full text-sm flex items-center hover:bg-gray-600 transition-colors">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                    </svg>
-                                    Add Skill
-                                </button>
+                                @forelse(Auth::user()->skills()->get() as $skill)
+                                    <span class="px-3 py-1 bg-blue-900 text-blue-200 rounded-full text-sm flex items-center">
+                                        {{ $skill->skill_name }}
+                                    </span>
+                                @empty
+                                    <p class="text-gray-400">No skills added yet.</p>
+                                @endforelse
                             </div>
                         </div>
                     </div>
