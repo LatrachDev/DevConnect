@@ -14,6 +14,7 @@ class Post extends Model
         'content',
         'user_id',
         'comments_count',
+        'image',
         'media_url',
         'likes_count'
     ];

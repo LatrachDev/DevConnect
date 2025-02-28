@@ -9,7 +9,6 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->text('bio')->nullable();
             $table->string('github')->nullable();
             $table->string('linkedin')->nullable();
             $table->string('website')->nullable();

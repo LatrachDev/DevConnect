@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('title')->nullable(); 
             $table->text('content'); 
-            $table->string('media_url')->nullable(); 
+            // $table->string('media_url')->nullable(); 
+            $table->string('image')->nullable();
             $table->enum('status', ['published', 'draft', 'archived'])->default('published');
             $table->unsignedInteger('likes_count')->default(0); 
             $table->unsignedInteger('comments_count')->default(0); 

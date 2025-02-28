@@ -31,8 +31,14 @@ class PostController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'media_url' => 'nullable|url'
+            // 'media_url' => 'nullable|url'
+            'image' => 'nullable|image'
         ]);
+
+        if ($request->hasFile('image')) 
+        {
+            $validated['image'] = $request->file('image')->store('image');
+        }
         
         $validated['user_id'] = auth()->id();
         Post::create($validated);
