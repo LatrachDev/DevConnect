@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900">
+    
     <!-- Navigation -->
     <nav class="fixed top-0 w-full bg-gray-800 text-gray-100 z-50">
         <div class="max-w-7xl mx-auto px-4">
@@ -34,7 +35,16 @@
                         <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-xl shadow-lg py-1 z-50">
                             <a href="/my_profile" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Profile</a>
                             <a href="/profile" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Update Profile</a>
-                            <a href="/logout" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Logout</a>
+                            <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+
+                            <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                {{ __('Log Out') }}
+                            </x-dropdown-link>
+                        </form>
+
                         </div>
                     </div>
                 </div>
@@ -143,7 +153,7 @@
                 </div>
 
                 <!-- post -->
-                @forelse(Auth::user()->posts()->get() as $post) 
+                @forelse($posts as $post) 
 
                 <div class="bg-white rounded-xl shadow-sm mx-auto mb-4">
                     <div class="p-4">
@@ -165,8 +175,12 @@
                                 </button>
                                 <!-- Dropdown Menu -->
                                 <div id="optionsDropdown-{{ $post->id }}" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg hidden">
-                                    <a href="/posts/edit" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Edit Post</a>
-                                    <button class="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-100">Delete Post</button>
+                                    <a href="{{ route('posts.edit', $post->id) }}" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Edit Post</a>
+                                    <form method="POST" action="{{ route('posts.destroy', $post->id) }}" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="w-full px-4 py-2 text-red-600 hover:bg-red-100">Delete Post</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

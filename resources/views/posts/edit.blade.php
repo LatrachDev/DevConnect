@@ -43,7 +43,7 @@
     </nav>
 
     <!-- Edit Post Form -->
-    <div class="max-w-7xl mx-auto px-4 py-16">
+    <div class="max-w-7xl mx-auto px-4 py-16 mt-10">
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
             <h2 class="text-2xl font-bold text-gray-100 mb-6">Edit Post</h2>
             <form action="{{ route('posts.update', $post->id) }}" method="POST">

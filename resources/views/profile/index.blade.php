@@ -127,7 +127,7 @@
                                 <!-- Dropdown Menu -->
                                 <div id="optionsDropdown-{{ $post->id }}" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg hidden">
                                     <a href="{{ route('posts.edit', $post->id) }}" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Edit Post</a>
-                                    <form method="POST" action="{{ route('posts.destroy', $post->id) }}" class="block w-full text-left">
+                                    <form method="POST" action="{{ route('posts.destroy', $post->id) }}" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="w-full px-4 py-2 text-red-600 hover:bg-red-100">Delete Post</button>

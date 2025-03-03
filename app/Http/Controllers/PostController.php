@@ -12,7 +12,12 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        // $posts = Post::latest()->paginate(10);
+        // dd($posts);
+
+        $posts = Post::all();
+
+        return view('dashboard', compact('posts'));
     }
 
     /**
