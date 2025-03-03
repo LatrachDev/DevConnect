@@ -120,7 +120,7 @@
                             </div>
                             <div class="flex justify-between text-sm mt-2">
                                 <span class="text-gray-400">Posts</span>
-                                <span class="text-blue-400 font-medium">{{ $posts->count() }}</span>
+                                <span class="text-blue-400 font-medium">{{ Auth::user()->posts()->count() }}</span>
                             </div>
                         </div>
                     </div>
