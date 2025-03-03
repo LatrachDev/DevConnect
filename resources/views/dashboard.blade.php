@@ -120,7 +120,7 @@
                             </div>
                             <div class="flex justify-between text-sm mt-2">
                                 <span class="text-gray-400">Posts</span>
-                                <span class="text-blue-400 font-medium">0</span>
+                                <span class="text-blue-400 font-medium">{{ $posts->count() }}</span>
                             </div>
                         </div>
                     </div>
@@ -161,7 +161,7 @@
                             <div class="flex items-center space-x-3">
                                 <img src="https://avatar.iran.liara.run/public/man" alt="User" class="w-12 h-12 rounded-full"/>
                                 <div>
-                                    <h3 class="font-semibold">{{ Auth::user()->name }}</h3>
+                                    <h3 class="font-semibold">{{ $post->user->name }}</h3>
                                     <p class="text-gray-500 text-sm font-bold">{{ $post->title }}</p>
                                     <p class="text-gray-500 text-sm">{{ $post->created_at }}</p>
                                 </div>
