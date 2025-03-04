@@ -66,7 +66,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Update Profile Information -->
-                <div class="md:col-span-2 bg-gray-800 rounded-xl shadow-sm">
+                <div class="md:col-span-1 bg-gray-800 rounded-xl shadow-sm">
                     <div class="p-6">
 
                         <div class="mt-6">
@@ -99,6 +99,57 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                     </svg>
                                     Add Skill
+                                </button>
+                            </form>
+
+                            <!-- Display added skills -->
+                            <div id="skillsContainer" class="flex flex-wrap gap-2">
+                                @forelse(Auth::user()->skills()->get() as $skill)
+                                    <span class="px-3 py-1 bg-blue-900 text-blue-200 rounded-full text-sm flex items-center">
+                                        {{ $skill->skill_name }}
+                                        <form action="{{ route('skills.destroy', $skill->id) }}" method="post" class="ml-1 hover:text-blue-100">
+                                            @csrf
+                                            @method('DELETE')    
+                                            <button type="submit" class="flex items-center">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </span>
+
+                                @empty
+                                    <p class="text-gray-400">No skills added yet.</p>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Programming languages -->
+                <div class="bg-gray-800 rounded-xl shadow-sm">
+                    <div class="p-6">
+                        <h3 class="text-lg font-semibold text-gray-100">Programming Languages</h3>
+                        <p class="text-sm text-gray-400 mt-1">Add your technical programming languages to highlight your expertise.</p>
+                        
+                        <div class="mt-6">
+                            <!-- Form for adding new skills -->
+                            <form action="{{ route('skills.store') }}" method="POST" class="flex items-center gap-2 mb-4">
+                                @csrf
+                                <input 
+                                    type="text" 
+                                    name="skill_name"
+                                    id="skillInput" 
+                                    placeholder="Write here" 
+                                    class="px-3 py-1 bg-gray-700 text-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                                <button 
+                                    type="submit"
+                                    class="px-3 py-1 bg-gray-700 text-gray-200 rounded-full text-sm flex items-center hover:bg-gray-600 transition-colors">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    Add language
                                 </button>
                             </form>
 
