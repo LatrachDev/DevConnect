@@ -29,7 +29,7 @@
                     <!-- Navigation icons remain the same -->
                     <div class="relative">
                         <button id="profileButton" class="h-8 w-8 rounded-full overflow-hidden focus:outline-none">
-                            <img src="https://avatar.iran.liara.run/public/boy" alt="Profile" class="w-full h-full object-cover"/>
+                            <img src="{{ Storage::url(Auth::user()->profile_image) ?? 'https://avatar.iran.liara.run/public/boy' }}" alt="Profile" class="w-full h-full object-cover"/>
                         </button>
                         
                         <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-xl shadow-lg py-1 z-50">
@@ -75,7 +75,7 @@
                 <div class="bg-gray-800 rounded-xl shadow-sm overflow-hidden">
                     <div class="relative">
                         <div class="h-24 bg-gradient-to-r from-blue-900 to-indigo-800"></div>
-                        <img src="https://avatar.iran.liara.run/public/boy" alt="Profile" 
+                        <img src="{{ Storage::url(Auth::user()->profile_image) ?? 'https://avatar.iran.liara.run/public/boy' }}" alt="Profile" 
                              class="absolute -bottom-6 left-4 w-20 h-20 rounded-full border-4 border-gray-800 shadow-md"/>
                     </div>
                     <div class="pt-14 p-4">
@@ -144,7 +144,7 @@
                 <!-- Post Creation -->
                 <div class="bg-gray-800 rounded-xl shadow-sm p-4">
                     <div class="flex items-center space-x-4">
-                        <img src="https://avatar.iran.liara.run/public/boy" alt="User" class="w-12 h-12 rounded-full"/>
+                        <img src="{{ Storage::url(Auth::user()->profile_image) ?? 'https://avatar.iran.liara.run/public/boy' }}" alt="User" class="w-12 h-12 rounded-full"/>
                         <a href="{{ route('posts.create') }}" class="bg-gray-700 hover:bg-gray-600 text-gray-400 text-left rounded-lg px-4 py-3 flex-grow transition-colors duration-200">
                             Share your knowledge or ask a question...
                         </a>
@@ -159,7 +159,7 @@
                     <div class="p-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
-                                <img src="https://avatar.iran.liara.run/public/man" alt="User" class="w-12 h-12 rounded-full"/>
+                                <img src="{{ Storage::url($post->user->profile_image) ?? 'https://avatar.iran.liara.run/public/boy' }}" alt="User" class="w-12 h-12 rounded-full"/>
                                 <div>
                                     <h3 class="font-semibold">{{ $post->user->name }}</h3>
                                     <p class="text-gray-500 text-sm font-bold">{{ $post->title }}</p>

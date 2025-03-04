@@ -28,20 +28,24 @@ class ProfileController extends Controller
     {
         $validated = $request->validate([
             'bio' => 'nullable|string|max:1000',
+            'profile_image' => 'sometimes',
             'github_url' => 'nullable|url|max:255',
             'linkedin_url' => 'nullable|url|max:255',
             'website_url' => 'nullable|url|max:255',
         ]);
 
         Auth::user();
+        $imagePath = null;
+        if ($request->hasFile('profile_image'))
+        {
+            $imagePath = $request->file('profile_image')->store('public/storage/image');
+            $validated['profile_image'] = $imagePath;
+        }
         $user = $request->user();
         $user->update($validated);
 
         return Redirect::to('/profile')->with('success', 'Profile updated successfully');
-        // return response()->json(['message' => 'Profile updated successfully']);
-        // Auth::user()->update($validated);
-
-        // return response()->json(['message' => 'Profile updated successfully']);
+        
     }
 
     /**
