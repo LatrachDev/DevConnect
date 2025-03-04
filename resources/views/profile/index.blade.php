@@ -11,12 +11,16 @@
             <div class="bg-gray-800 rounded-xl shadow-sm overflow-hidden">
                 <div class="relative">
                     <div class="h-32 bg-gradient-to-r from-blue-900 to-indigo-800"></div>
-                    <img src="{{ Auth::user()->profile_photo_url ?? 'https://avatar.iran.liara.run/public/boy' }}" alt="Profile" 
+                    <img src="{{ Storage::url(Auth::user()->profile_image) ?? 'https://avatar.iran.liara.run/public/boy' }}" alt="Profile" 
                          class="absolute -bottom-6 left-6 w-24 h-24 rounded-full border-4 border-gray-800 shadow-md object-cover"/>
                 </div>
                 <div class="pt-16 p-6">
                     <div class="flex items-center justify-between">
                         <h2 class="text-2xl font-bold text-white">{{ Auth::user()->name }}</h2>
+                    </div>
+
+                    <div class="mt-4">
+                        <p class="text-gray-300" id="userBio">{{ Auth::user()->bio ?? 'Add a bio to tell others about yourself...' }}</p>
                     </div>
                     
                     <div class="mt-4">
@@ -110,7 +114,7 @@
                     <div class="p-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
-                                <img src="https://avatar.iran.liara.run/public/man" alt="User" class="w-12 h-12 rounded-full"/>
+                                <img src="{{ Storage::url(Auth::user()->profile_image) ?? 'https://avatar.iran.liara.run/public/boy' }}" alt="User" class="w-12 h-12 rounded-full"/>
                                 <div>
                                     <h3 class="font-semibold">{{ Auth::user()->name }}</h3>
                                     <p class="text-gray-500 text-sm font-bold">{{ $post->title }}</p>
@@ -143,22 +147,18 @@
                                 <img src="{{ Storage::url($post->image) }}" alt="">
                             </div>
 
-                            <div class="mt-4 flex items-center justify-between border-t pt-4">
-                                <div class="flex items-center space-x-4">
-                                @livewire('like-button', ['post' => $post])
-
-                                    <button class="flex items-center space-x-2 text-gray-500 hover:text-blue-500">
+                            <div class="w-full mt-4 flex items-center justify-between border-t pt-4">
+                                <div class=" w-full flex space-x-4">
+                                    
+                                    @livewire('like-button', ['post' => $post])
+                                    
+                                    @livewire('comment-section', ['post' => $post])
+                                    <button class="text-gray-500 hover:text-blue-500">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
                                         </svg>
-                                        <span>{{ $post->comments_count }}</span>
                                     </button>
                                 </div>
-                                <button class="text-gray-500 hover:text-blue-500">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
-                                    </svg>
-                                </button>
                             </div>
                         </div>
                     </div>

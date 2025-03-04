@@ -9,11 +9,33 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <!-- Profile Header Card -->
             <div class="bg-gray-800 rounded-xl shadow-sm overflow-hidden">
-                <div class="relative">
-                    <div class="h-32 bg-gradient-to-r from-blue-900 to-indigo-800"></div>
-                    <img src="{{ Auth::user()->profile_photo_url ?? 'https://avatar.iran.liara.run/public/boy' }}" alt="Profile" 
-                         class="absolute -bottom-6 left-6 w-24 h-24 rounded-full border-4 border-gray-800 shadow-md object-cover"/>
+            
+            <div class="relative">
+                <!-- Background Gradient -->
+                <div class="h-32 bg-gradient-to-r from-blue-900 to-indigo-800"></div>
+
+                <!-- Profile Photo Container -->
+                <div class="absolute -bottom-6 left-6">
+                    <!-- Profile Image -->
+                    <img src="{{ Storage::url($user->profile_image) ?? 'https://avatar.iran.liara.run/public/boy' }}" 
+                        alt="Profile" 
+                        class="w-24 h-24 rounded-full border-4 border-gray-800 shadow-md object-cover"/>
+
+                    <!-- File Input Overlay -->
+                    <div class="absolute bottom-0 right-0 bg-gray-800 p-2 rounded-full cursor-pointer hover:bg-gray-700 transition-colors duration-200">
+                        <!-- Camera Icon -->
+                        <label for="profile-photo" class="cursor-pointer">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </label>
+                        <!-- Hidden File Input -->
+                        <input type="file" id="profile-photo" class="hidden" accept="image/*"/>
+                    </div>
                 </div>
+            </div>
+            
                 <div class="pt-16 p-6">
                     <div class="flex items-center justify-between">
                         <h2 class="text-2xl font-bold text-white">{{ Auth::user()->name }}</h2>
@@ -211,7 +233,7 @@
                     </button>
                 </div>
                 
-                <form id="profileForm" method="POST" action="{{ route('profile.update') }}">
+                <form id="profileForm" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
                     
@@ -233,6 +255,11 @@
                     <div class="mb-6">
                         <label for="website_url" class="block text-sm font-medium text-gray-300 mb-1">Personal Website</label>
                         <input type="url" id="website_url" name="website_url" value="{{ Auth::user()->website_url }}" class="w-full rounded-lg bg-gray-700 border-gray-600 text-gray-200 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="profile_image" class="block text-sm font-medium text-gray-300 mb-1">Profile Image</label>
+                        <input type="file" id="profile_image" name="profile_image" accept="image/*" class="w-full rounded-lg bg-gray-700 border-gray-600 text-gray-200 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                     </div>
                     
                     <div class="flex justify-end">
