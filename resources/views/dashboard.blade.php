@@ -256,13 +256,7 @@
                 <div class="bg-gray-800 rounded-xl shadow-sm p-4">
                     <h3 class="font-semibold text-gray-100 mb-4">Suggested Connections</h3>
                     <div class="flex items-center justify-between hover:bg-gray-700 p-2 rounded-lg">
-                        <div class="flex items-center space-x-3">
-                            <img src="https://avatar.iran.liara.run/public/boy" alt="User" class="w-10 h-10 rounded-full"/>
-                            <div>
-                                <h4 class="font-medium text-gray-100">Emily Zhang</h4>
-                                <p class="text-gray-400 text-sm">Frontend Developer</p>
-                            </div>
-                        </div>
+                        @livewire('user-list')
                     </div>
                 </div>
             </div>
