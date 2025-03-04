@@ -35,7 +35,7 @@ class CommentSection extends Component
         ]);
 
         $this->content = '';
-        $this->comments = $this->post->comments()->get();
+        $this->comments = $this->post->comments()->latest()->get();
     }
 
     public function render()
