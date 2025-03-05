@@ -24,9 +24,68 @@
                         </svg>
                     </div>
                 </div>
+
                 
                 <div class="flex items-center space-x-6">
                     <!-- Navigation icons remain the same -->
+                    <!-- ******************************************************************************** -->
+                      <!-- Notification Dropdown -->
+                        <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open" class="flex items-center space-x-1 hover:text-blue-400 relative">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                                <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
+                                    {{ auth()->user()->notifications->count() }}
+                                </span>
+                            </button>
+    
+                            <!-- Notification Dropdown Menu -->
+                            <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100"
+                                x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 transform scale-100"
+                                x-transition:leave-end="opacity-0 transform scale-95"
+                                class="absolute -right-36 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border dark:border-gray-700 z-50">
+                                <div class="px-4 py-3 border-b dark:border-gray-700 flex justify-between items-center">
+                                    <h3 class="text-sm font-medium text-gray-900 dark:text-white">Notifications</h3>
+                                    <button class="text-xs text-blue-500 hover:text-blue-700">
+                                        Mark all as read
+                                    </button>
+                                </div>
+                                <!-- Notification Items -->
+                                <div class="max-h-96 overflow-y-auto">
+                                    @foreach (auth()->user()->notifications as $notification)
+                                    <div class="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer border-b last:border-b-0 dark:border-gray-700">
+                                        <div class="flex items-start space-x-3">
+                                            <div class="flex-shrink-0">
+                                                <img src="{{ asset('storage/' . (auth()->user()->profile_link ??  'default/user.png')) }}" class="w-8 h-8 rounded-full" alt="Avatar">
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                                                    hmidouche amine
+                                                </p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400">
+                                                    @if (is_array($notification->data) && isset($notification->data['comment']))
+                                                    {{$notification->data['comment']}}
+                                                    @endif
+                                                </p>
+                                                <p class="text-xs text-gray-400 dark:text-gray-500">
+                                                    2 mins ago
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                <div class="px-4 py-3 text-center border-t dark:border-gray-700">
+                                    <a href="#" class="text-sm text-blue-500 hover:text-blue-700">
+                                        View all notifications
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <!-- ******************************************************************************** -->
                     <div class="relative">
                         <button id="profileButton" class="h-8 w-8 rounded-full overflow-hidden focus:outline-none">
                             <img src="{{ Storage::url(Auth::user()->profile_image) ?? 'https://avatar.iran.liara.run/public/boy' }}" alt="Profile" class="w-full h-full object-cover"/>
@@ -258,10 +317,56 @@
                     <div class="flex items-center justify-between hover:bg-gray-700 p-2 rounded-lg">
                         @livewire('user-list')
                     </div>
+                    <!-- Button to view all connections -->
+                    <div class="flex justify-center mt-4">
+                        <a href="{{ route('connections.index') }}" class="flex items-center text-blue-400 hover:text-blue-500">
+                            <span>View All Connections</span>
+                            <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
             
         </div>
     </div>
+
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+
+<script>
+
+    @php
+        $userId = auth()->check() ? auth()->user()->id : 0;
+    @endphp
+        console.log("yes is me", {{ $userId }});
+
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+            cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
+            encrypted: true
+        });
+
+        var channel = pusher.subscribe('my-channel');
+
+        // Listen for the broadcasted event
+        channel.bind("Illuminate\\Notifications\\Events\\BroadcastNotificationCreated", function(data) {
+
+            console.log("Notification received:", data);
+            alert(data.content);
+
+
+            // Check if 'comment' exists in the data
+            if (data.content) {
+                alert(data.content);
+            } else {
+                alert('No comment found in the data!');
+            }
+        });
+
+</script>
 </body>
 </html>
+
+
