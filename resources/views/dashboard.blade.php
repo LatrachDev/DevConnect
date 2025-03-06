@@ -43,62 +43,62 @@
     
                             <!-- Notification Dropdown Menu -->
                             <div x-show="open" @click.away="open = false" 
-    x-transition:enter="transition ease-out duration-100"
-    x-transition:enter-start="opacity-0 transform scale-95" 
-    x-transition:enter-end="opacity-100 transform scale-100"
-    x-transition:leave="transition ease-in duration-75" 
-    x-transition:leave-start="opacity-100 transform scale-100"
-    x-transition:leave-end="opacity-0 transform scale-95"
-    class="absolute -right-36 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border dark:border-gray-700 z-50">
+                            x-transition:enter="transition ease-out duration-100"
+                            x-transition:enter-start="opacity-0 transform scale-95" 
+                            x-transition:enter-end="opacity-100 transform scale-100"
+                            x-transition:leave="transition ease-in duration-75" 
+                            x-transition:leave-start="opacity-100 transform scale-100"
+                            x-transition:leave-end="opacity-0 transform scale-95"
+                            class="absolute -right-36 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border dark:border-gray-700 z-50">
 
-    <div class="px-4 py-3 border-b dark:border-gray-700 flex justify-between items-center">
-        <h3 class="text-sm font-medium text-gray-900 dark:text-white">Notifications</h3>
-        <button class="text-xs text-blue-500 hover:text-blue-700">
-            Mark all as read
-        </button>
-    </div>
+                            <div class="px-4 py-3 border-b dark:border-gray-700 flex justify-between items-center">
+                                <h3 class="text-sm font-medium text-gray-900 dark:text-white">Notifications</h3>
+                                <button class="text-xs text-blue-500 hover:text-blue-700">
+                                    Mark all as read
+                                </button>
+                            </div>
 
-    <!-- Notification Items -->
-    <div class="max-h-96 overflow-y-auto">
-        @foreach (auth()->user()->notifications as $notification)
-            @php
-                $sender = \App\Models\User::find($notification->data['user_id'] ?? null);
-            @endphp
-            <div class="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer border-b last:border-b-0 dark:border-gray-700">
-                <div class="flex items-start space-x-3">
-                    <div class="flex-shrink-0">
-                    <img 
-                        src="{{ $sender && $sender->profile_image ? Storage::url($sender->profile_image) : 'https://avatar.iran.liara.run/public/boy' }}" 
-                        class="w-8 h-8 rounded-full" alt="Avatar">
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-900 dark:text-white">
-                            {{ $notification->data['user_name'] ?? 'Unknown User' }}
-                        </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center space-x-2">
-                            
+                            <!-- Notification Items -->
+                            <div class="max-h-96 overflow-y-auto">
+                                @foreach (auth()->user()->notifications as $notification)
+                                    @php
+                                        $sender = \App\Models\User::find($notification->data['user_id'] ?? null);
+                                    @endphp
+                                    <div class="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer border-b last:border-b-0 dark:border-gray-700">
+                                        <div class="flex items-start space-x-3">
+                                            <div class="flex-shrink-0">
+                                            <img 
+                                                src="{{ $sender && $sender->profile_image ? Storage::url($sender->profile_image) : 'https://avatar.iran.liara.run/public/boy' }}" 
+                                                class="w-8 h-8 rounded-full" alt="Avatar">
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                                                    {{ $notification->data['user_name'] ?? 'Unknown User' }}
+                                                </p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center space-x-2">
+                                                    
 
-                            <!-- User Comment Text -->
-                            <span>{{ $notification->data['user_name'] ?? 'Someone' }} commented: </span>
-                            <span class="font-medium">{{ $notification->data['content'] ?? 'No comment available' }}</span>
-                        </p>
+                                                    <!-- User Comment Text -->
+                                                    <span>{{ $notification->data['user_name'] ?? 'Someone' }} commented: </span>
+                                                    <span class="font-medium">{{ $notification->data['content'] ?? 'No comment available' }}</span>
+                                                </p>
 
-                        
-                        <p class="text-xs text-gray-400 dark:text-gray-500">
-                            {{ $notification->created_at->diffForHumans() }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div>
+                                                
+                                                <p class="text-xs text-gray-400 dark:text-gray-500">
+                                                    {{ $notification->created_at->diffForHumans() }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
 
-    <div class="px-4 py-3 text-center border-t dark:border-gray-700">
-        <a href="#" class="text-sm text-blue-500 hover:text-blue-700">
-            View all notifications
-        </a>
-    </div>
-</div>
+                            <div class="px-4 py-3 text-center border-t dark:border-gray-700">
+                                <a href="#" class="text-sm text-blue-500 hover:text-blue-700">
+                                    View all notifications
+                                </a>
+                            </div>
+                        </div>
 
                         </div>
                     <!-- ******************************************************************************** -->
@@ -238,7 +238,7 @@
                                 <div>
                                     <h3 class="font-semibold">{{ $post->user->name }}</h3>
                                     <p class="text-gray-500 text-sm font-bold">{{ $post->title }}</p>
-                                    <p class="text-gray-500 text-sm">{{ $post->created_at }}</p>
+                                    <p class="text-gray-500 text-sm">{{ $post->created_at->diffForHumans() }}</p>
                                 </div>
                             </div>
                             <!-- Options Button -->
