@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Comment;
 use App\Models\Post;
+use App\Notifications\CommentNotification;
 use Livewire\Component;
 use SebastianBergmann\CodeUnit\FunctionUnit;
 
@@ -28,11 +29,16 @@ class CommentSection extends Component
     {
         $this->validate();
 
-        Comment::create([
+        $comment = Comment::create([
             'comment' => $this->content,
             'post_id' => $this->post->id,
             'user_id' => auth()->id()
         ]);
+
+        $post = Post::find($this->post->id);
+        $post->user->notify(new CommentNotification($comment));
+
+        
 
         $this->content = '';
         $this->comments = $this->post->comments()->latest()->get();

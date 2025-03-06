@@ -3,6 +3,7 @@
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SkillController;
+use App\Http\Controllers\ConnectionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +32,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/skills', [SkillController::class, 'store'])->name('skills.store');
     Route::delete('/skills/{skill}', [SkillController::class, 'destroy'])->name('skills.destroy');
+    Route::post('/connections/send/{user}', [ConnectionController::class, 'sendRequest'])->name('connections.send');
+    Route::post('/connections/accept/{connection}', [ConnectionController::class, 'acceptRequest'])->name('connections.accept');
+    Route::post('/connections/reject/{connection}', [ConnectionController::class, 'rejectRequest'])->name('connections.reject');
+    Route::get('/connections/pending', [ConnectionController::class, 'getPendingRequests'])->name('connections.pending');
+    Route::get('/connections', [ConnectionController::class, 'showConnectionsPage'])->name('connections.index');
 });
 
 Route::get('/my_profile', [App\Http\Controllers\ProfileController::class, 'index'])
