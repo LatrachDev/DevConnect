@@ -36,7 +36,12 @@ class CommentSection extends Component
         ]);
 
         $post = Post::find($this->post->id);
-        $post->user->notify(new CommentNotification($comment));
+        if ($post->user->id !== auth()->id())
+        {
+            $post->user->notify(new CommentNotification($comment));
+        }
+
+        // $post->user->notify(new CommentNotification($comment));
 
         
 

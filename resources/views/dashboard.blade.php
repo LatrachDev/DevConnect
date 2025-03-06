@@ -64,6 +64,8 @@
                                     @php
                                         $sender = \App\Models\User::find($notification->data['user_id'] ?? null);
                                     @endphp
+                                    
+                                    
                                     <div class="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer border-b last:border-b-0 dark:border-gray-700">
                                         <div class="flex items-start space-x-3">
                                             <div class="flex-shrink-0">
@@ -90,6 +92,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                 
                                 @endforeach
                             </div>
 
