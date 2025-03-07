@@ -25,13 +25,8 @@ class Connection extends Model
         return $this->belongsTo(User::class, 'receiver_id');
     }
 
-    // public function isSender()
-    // {
-    //     return $this->sender_id === auth()->id();
-    // }
-
-    public function user() 
+    public function isSender()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->sender_id === auth()->id();
     }
 }

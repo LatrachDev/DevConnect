@@ -60,45 +60,130 @@
         </div>
     @endif
 
-        <h1 class="text-3xl font-bold text-white mt-8">Connections</h1>
-        <div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-md">
-            <!-- Pending Connections -->
-            <h2 class="text-xl font-semibold text-blue-400 mb-4">Pending Requests</h2>
-            <!-- Loop through pending requests -->
-            <div class="space-y-4">
-                @foreach ($pendingRequests as $request)
-                    <div class="flex justify-between items-center bg-gray-700 p-4 rounded-lg">
-                        <div class="text-gray-300">{{ $request->sender->name }}</div>
-                        <div class="space-x-2">
-                            <form method="POST" action="{{ route('connections.accept', $request->id) }}">
-                                @csrf
-                                <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded">Accept</button>
-                            </form>
-                            <form method="POST" action="{{ route('connections.reject', $request->id) }}">
-                                @csrf
-                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Reject</button>
-                            </form>
-                        </div>
+        <h1 class="text-3xl font-bold text-white mt-8 mb-6">Your Network</h1>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <div class="lg:col-span-2">
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold text-blue-400 mb-4">Suggested Connections</h2>
+                    <!-- Suggested Connections -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        @foreach ($users as $user)
+                            @if ($user->id !== auth()->id() && !$user->isConnectedWith(auth()->user()))
+                                <div class="bg-gray-700 p-4 rounded-lg flex items-center space-x-4">
+                                    <img src="{{ Storage::url($user->profile_image) ?? 'https://avatar.iran.liara.run/public/boy' }}" 
+                                         alt="{{ $user->name }}" 
+                                         class="w-12 h-12 rounded-full object-cover">
+                                    <div class="flex-1">
+                                        <h3 class="text-gray-200 font-medium">{{ $user->name }}</h3>
+                                        <p class="text-gray-400 text-sm">{{ $user->title ?? 'Developer' }}</p>
+                                    </div>
+                                    @if ($user->hasPendingConnectionWith(auth()->user()))
+                                        <button disabled class="bg-gray-600 text-gray-300 px-4 py-2 rounded-lg text-sm cursor-not-allowed">
+                                            Pending
+                                        </button>
+                                    @else
+                                        <form method="POST" action="{{ route('connections.request', $user->id) }}">
+                                            @csrf
+                                            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-colors duration-200">
+                                                Connect
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
-                @endforeach
+                </div>
             </div>
 
-            <!-- Accepted Connections -->
-            <h2 class="text-xl font-semibold text-blue-400 mt-8 mb-4">Accepted Connections</h2>
-            <!-- Loop through accepted connections -->
-            <div class="space-y-4">
-                @foreach ($acceptedConnections as $connection)
-                    <div class="flex justify-between items-center bg-gray-700 p-4 rounded-lg">
-                        <div class="text-gray-300">{{ $connection->receiver->name }}</div>
-                        <form method="POST" action="{{ route('connections.remove', $connection->id) }}">
-                            @csrf
-                            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Remove</button>
-                        </form>
+            <!-- Pending Requests Section -->
+            <div class="space-y-6">
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold text-blue-400 mb-4">Pending Requests</h2>
+                    <div class="space-y-4">
+                        @forelse ($pendingRequests as $request)
+                            <div class="bg-gray-700 p-4 rounded-lg">
+                                <div class="flex items-center space-x-4 mb-3">
+                                    <img src="{{ Storage::url($request->sender->profile_image) ?? 'https://avatar.iran.liara.run/public/boy' }}" 
+                                         alt="{{ $request->sender->name }}" 
+                                         class="w-10 h-10 rounded-full object-cover">
+                                    <div>
+                                        <div class="text-gray-200 font-medium">{{ $request->sender->name }}</div>
+                                        <div class="text-gray-400 text-sm">{{ $request->sender->title ?? 'Developer' }}</div>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <form method="POST" action="{{ route('connections.accept', $request->id) }}" class="flex-1">
+                                        @csrf
+                                        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm transition-colors duration-200">Accept</button>
+                                    </form>
+                                    <form method="POST" action="{{ route('connections.reject', $request->id) }}" class="flex-1">
+                                        @csrf
+                                        <button type="submit" class="w-full bg-gray-600 hover:bg-gray-500 text-white px-3 py-2 rounded-lg text-sm transition-colors duration-200">Decline</button>
+                                    </form>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-gray-400 text-center py-4">No pending requests</p>
+                        @endforelse
                     </div>
-                @endforeach
+                </div>
+
+                <!-- Your Friends Section -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold text-blue-400 mb-4">Your Friends</h2>
+                    <div class="space-y-4">
+                        @forelse ($acceptedConnections as $user)
+                            <div class="bg-gray-700 p-4 rounded-lg">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-4">
+                                        <img src="{{ Storage::url($user->profile_image) ?? 'https://avatar.iran.liara.run/public/boy' }}" 
+                                             alt="{{ $user->name }}" 
+                                             class="w-10 h-10 rounded-full object-cover">
+                                        <div>
+                                            <div class="text-gray-200 font-medium">{{ $user->name }}</div>
+                                            <div class="text-gray-400 text-sm">{{ $user->title ?? 'Developer' }}</div>
+                                        </div>
+                                    </div>
+                                    <form method="POST" action="{{ route('connections.remove', auth()->user()->getConnectionWith($user)->id) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-400 hover:text-red-300 transition-colors duration-200">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-gray-400 text-center py-4">No connections yet</p>
+                        @endforelse
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <script>
+        // Toggle profile dropdown
+        const profileButton = document.getElementById('profileButton');
+        const profileDropdown = document.getElementById('profileDropdown');
+        
+        if (profileButton && profileDropdown) {
+            profileButton.addEventListener('click', () => {
+                profileDropdown.classList.toggle('hidden');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!profileButton.contains(e.target) && !profileDropdown.contains(e.target)) {
+                    profileDropdown.classList.add('hidden');
+                }
+            });
+        }
+    </script>
 </body>
-</html> 
+</html>

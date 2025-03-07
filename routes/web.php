@@ -3,7 +3,7 @@
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SkillController;
-use App\Http\Controllers\ConnectionController;
+use App\Http\Controllers\ConnectionsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,8 +21,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
 Route::get('/dashboard', [PostController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -32,11 +30,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/skills', [SkillController::class, 'store'])->name('skills.store');
     Route::delete('/skills/{skill}', [SkillController::class, 'destroy'])->name('skills.destroy');
-    Route::post('/connections/send/{user}', [ConnectionController::class, 'sendRequest'])->name('connections.send');
-    Route::post('/connections/accept/{connection}', [ConnectionController::class, 'acceptRequest'])->name('connections.accept');
-    Route::post('/connections/reject/{connection}', [ConnectionController::class, 'rejectRequest'])->name('connections.reject');
-    Route::get('/connections/pending', [ConnectionController::class, 'getPendingRequests'])->name('connections.pending');
-    Route::get('/connections', [ConnectionController::class, 'showConnectionsPage'])->name('connections.index');
+    // Connection routes
+    Route::get('/connections', [ConnectionsController::class, 'index'])->name('connections.index');
+    Route::post('/connections/request/{user}', [ConnectionsController::class, 'request'])->name('connections.request');
+    Route::post('/connections/accept/{connection}', [ConnectionsController::class, 'accept'])->name('connections.accept');
+    Route::post('/connections/reject/{connection}', [ConnectionsController::class, 'reject'])->name('connections.reject');
+    Route::delete('/connections/remove/{connection}', [ConnectionsController::class, 'remove'])->name('connections.remove');
 });
 
 Route::get('/my_profile', [App\Http\Controllers\ProfileController::class, 'index'])
@@ -46,4 +45,3 @@ Route::get('/my_profile', [App\Http\Controllers\ProfileController::class, 'index
 Route::resource('posts', PostController::class)->middleware('auth');
 
 require __DIR__.'/auth.php';
-

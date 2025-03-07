@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Connection;
 
 class User extends Authenticatable
 {
@@ -74,5 +75,49 @@ class User extends Authenticatable
     public function getSkillsAttribute($value)
     {
         return $value ? json_decode($value, true) : [];
+    }
+
+    public function isConnectedWith(User $user)
+    {
+        return Connection::where(function($query) use ($user) {
+                $query->where(function($q) use ($user) {
+                    $q->where('sender_id', $this->id)
+                      ->where('receiver_id', $user->id);
+                })->orWhere(function($q) use ($user) {
+                    $q->where('sender_id', $user->id)
+                      ->where('receiver_id', $this->id);
+                });
+            })
+            ->where('status', 'accepted')
+            ->exists();
+    }
+
+    public function hasPendingConnectionWith(User $user)
+    {
+        return Connection::where(function($query) use ($user) {
+                $query->where(function($q) use ($user) {
+                    $q->where('sender_id', $this->id)
+                      ->where('receiver_id', $user->id);
+                })->orWhere(function($q) use ($user) {
+                    $q->where('sender_id', $user->id)
+                      ->where('receiver_id', $this->id);
+                });
+            })
+            ->where('status', 'pending')
+            ->exists();
+    }
+
+    public function getConnectionWith(User $user)
+    {
+        return Connection::where(function($query) use ($user) {
+                $query->where(function($q) use ($user) {
+                    $q->where('sender_id', $this->id)
+                      ->where('receiver_id', $user->id);
+                })->orWhere(function($q) use ($user) {
+                    $q->where('sender_id', $user->id)
+                      ->where('receiver_id', $this->id);
+                });
+            })
+            ->first();
     }
 }
