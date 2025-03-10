@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\User;
+use App\Models\Connection;
 
 class ProfileController extends Controller
 {
@@ -72,5 +74,33 @@ class ProfileController extends Controller
     public function index()
     {
         return view('profile.index');
+    }
+
+    /**
+     * Display a user's public profile.
+     */
+    public function view(User $user): View
+    {
+        // Get connection status with the authenticated user
+        $connection = null;
+        if (auth()->check()) {
+            $connection = Connection::where(function($query) use ($user) {
+                    $query->where(function($q) use ($user) {
+                        $q->where('sender_id', auth()->id())
+                          ->where('receiver_id', $user->id);
+                    })->orWhere(function($q) use ($user) {
+                        $q->where('sender_id', $user->id)
+                          ->where('receiver_id', auth()->id());
+                    });
+                })
+                ->first();
+        }
+
+        return view('profile.view', [
+            'user' => $user,
+            'connection' => $connection,
+            'posts' => $user->posts()->with('user')->latest()->get(),
+            'skills' => $user->skills
+        ]);
     }
 }

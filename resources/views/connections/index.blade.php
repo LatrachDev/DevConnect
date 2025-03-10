@@ -32,8 +32,8 @@
                         </button>
                         
                         <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-xl shadow-lg py-1 z-50">
-                            <a href="/my_profile" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Profile</a>
-                            <a href="/profile" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Update Profile</a>
+                            <a href="{{ route('profile.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Profile</a>
+                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Update Profile</a>
                             <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Logout</button>
@@ -79,7 +79,21 @@
                                         <h3 class="text-gray-200 font-medium">{{ $user->name }}</h3>
                                         <p class="text-gray-400 text-sm">{{ $user->title ?? 'Developer' }}</p>
                                     </div>
-                                    @if ($user->hasPendingConnectionWith(auth()->user()))
+                                    @php
+                                        $pendingConnection = $pendingRequests->where('sender_id', $user->id)->first();
+                                    @endphp
+                                    @if ($pendingConnection)
+                                        <div class="flex space-x-2">
+                                            <form method="POST" action="{{ route('connections.accept', $pendingConnection->id) }}" class="flex-1">
+                                                @csrf
+                                                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm transition-colors duration-200">Accept</button>
+                                            </form>
+                                            <form method="POST" action="{{ route('connections.reject', $pendingConnection->id) }}" class="flex-1">
+                                                @csrf
+                                                <button type="submit" class="w-full bg-gray-600 hover:bg-gray-500 text-white px-3 py-2 rounded-lg text-sm transition-colors duration-200">Decline</button>
+                                            </form>
+                                        </div>
+                                    @elseif ($user->hasPendingConnectionWith(auth()->user()))
                                         <button disabled class="bg-gray-600 text-gray-300 px-4 py-2 rounded-lg text-sm cursor-not-allowed">
                                             Pending
                                         </button>
@@ -147,15 +161,20 @@
                                             <div class="text-gray-400 text-sm">{{ $user->title ?? 'Developer' }}</div>
                                         </div>
                                     </div>
-                                    <form method="POST" action="{{ route('connections.remove', auth()->user()->getConnectionWith($user)->id) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-400 hover:text-red-300 transition-colors duration-200">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                            </svg>
-                                        </button>
-                                    </form>
+                                    <div class="flex items-center space-x-4">
+                                        <a href="{{ route('profile.view', $user->id) }}" class="text-blue-400 hover:text-blue-300 transition-colors duration-200">
+                                            View Profile
+                                        </a>
+                                        <form method="POST" action="{{ route('connections.remove', auth()->user()->getConnectionWith($user)->id) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-400 hover:text-red-300 transition-colors duration-200">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         @empty

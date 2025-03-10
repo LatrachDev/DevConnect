@@ -17,12 +17,9 @@ class ConnectionsController extends Controller
             ->with('sender')
             ->get();
 
-        // Get all accepted connections
         $acceptedConnections = Connection::where(function($query) {
-                $query->where(function($q) {
-                    $q->where('sender_id', auth()->id())
-                      ->orWhere('receiver_id', auth()->id());
-                });
+                $query->where('sender_id', auth()->id())
+                    ->orWhere('receiver_id', auth()->id());
             })
             ->where('status', 'accepted')
             ->with(['sender', 'receiver'])
@@ -39,21 +36,28 @@ class ConnectionsController extends Controller
 
     public function request(User $user)
     {
-        // Check if connection already exists
-        $existingConnection = Connection::where(function($query) use ($user) {
-                $query->where(function($q) use ($user) {
-                    $q->where('sender_id', auth()->id())
-                      ->where('receiver_id', $user->id);
-                })->orWhere(function($q) use ($user) {
-                    $q->where('sender_id', $user->id)
-                      ->where('receiver_id', auth()->id());
-                });
-            })->first();
 
-        if ($existingConnection) {
-            if ($existingConnection->status === 'pending') {
+        $existingConnection = Connection::where(function($query) use ($user) 
+        {
+            $query->where(function($q) use ($user) 
+            {
+                $q->where('sender_id', auth()->id())
+                    ->where('receiver_id', $user->id);
+            })->orWhere(function($q) use ($user) 
+            {
+                $q->where('sender_id', $user->id)
+                    ->where('receiver_id', auth()->id());
+            });
+        })->first();
+
+        if ($existingConnection) 
+        {
+            if ($existingConnection->status === 'pending') 
+            {
                 return back()->with('error', 'Connection request already pending.');
-            } elseif ($existingConnection->status === 'accepted') {
+            } 
+            elseif ($existingConnection->status === 'accepted') 
+            {
                 return back()->with('error', 'You are already connected with this user.');
             }
         }
@@ -69,42 +73,18 @@ class ConnectionsController extends Controller
 
     public function accept(Connection $connection)
     {
-        if ($connection->receiver_id !== auth()->id()) {
-            return back()->with('error', 'Unauthorized action.');
-        }
-
-        if ($connection->status !== 'pending') {
-            return back()->with('error', 'This request is no longer pending.');
-        }
-
         $connection->update(['status' => 'accepted']);
         return back()->with('success', 'Connection request accepted.');
     }
 
     public function reject(Connection $connection)
     {
-        if ($connection->receiver_id !== auth()->id()) {
-            return back()->with('error', 'Unauthorized action.');
-        }
-
-        if ($connection->status !== 'pending') {
-            return back()->with('error', 'This request is no longer pending.');
-        }
-
         $connection->delete();
         return back()->with('success', 'Connection request rejected.');
     }
 
     public function remove(Connection $connection)
     {
-        if ($connection->sender_id !== auth()->id() && $connection->receiver_id !== auth()->id()) {
-            return back()->with('error', 'Unauthorized action.');
-        }
-
-        if ($connection->status !== 'accepted') {
-            return back()->with('error', 'This connection is not active.');
-        }
-
         $connection->delete();
         return back()->with('success', 'Connection removed successfully.');
     }

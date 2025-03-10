@@ -24,24 +24,26 @@ Route::get('/', function () {
 Route::get('/dashboard', [PostController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    // Route::get('/showProfile', [ProfileController::class, 'index'])->name('profile.index');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile/{user}', [ProfileController::class, 'view'])->name('profile.view');
+    Route::get('/my-profile', [ProfileController::class, 'index'])->name('profile.index');
+    
+    // Skills routes
     Route::post('/skills', [SkillController::class, 'store'])->name('skills.store');
     Route::delete('/skills/{skill}', [SkillController::class, 'destroy'])->name('skills.destroy');
+    
     // Connection routes
     Route::get('/connections', [ConnectionsController::class, 'index'])->name('connections.index');
     Route::post('/connections/request/{user}', [ConnectionsController::class, 'request'])->name('connections.request');
     Route::post('/connections/accept/{connection}', [ConnectionsController::class, 'accept'])->name('connections.accept');
     Route::post('/connections/reject/{connection}', [ConnectionsController::class, 'reject'])->name('connections.reject');
     Route::delete('/connections/remove/{connection}', [ConnectionsController::class, 'remove'])->name('connections.remove');
+    
+    // Posts routes
+    Route::resource('posts', PostController::class);
 });
-
-Route::get('/my_profile', [App\Http\Controllers\ProfileController::class, 'index'])
-    ->name('profile.index')
-    ->middleware(['auth']);
-
-Route::resource('posts', PostController::class)->middleware('auth');
 
 require __DIR__.'/auth.php';
